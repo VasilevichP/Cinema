@@ -14,7 +14,7 @@ function App() {
     const account = {login,password}
     console.log(account)
     try{
-      const response = await axios.post("http://localhost:8080/authorization/authorize",
+      const response = await axios.post("http://localhost:8080/account/authorize",
         account
       )
       let status = response.data;
@@ -22,12 +22,10 @@ function App() {
       
       switch(status){
         case 0: 
-          console.log("in 0")
           localStorage.setItem("role",0)
           navigate(`/mainpage`);
           break;
         case 1:
-          console.log("in 1")
           localStorage.setItem("role",1)
           navigate(`/mainpage`);
           break;
