@@ -19,7 +19,7 @@ import static com.example.demo.CinemaApplication.context;
 
 @Service
 public class MovieService {
-    public static ArrayList<String> movieGenres = new ArrayList<String>();
+    public static ArrayList<String> movieGenres;
     private final MovieRepository movieRepository;
     private final GenresRepository genresRepository;
     private final SessionRepository sessionRepository;
@@ -32,6 +32,7 @@ public class MovieService {
     }
 
     public Movie getMovie(String title) {
+        movieGenres = new ArrayList<>();
         ApiService apiService = context.getBean(ApiService.class);
         Movie movie;
         try {

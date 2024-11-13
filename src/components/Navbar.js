@@ -9,7 +9,6 @@ export default function Navbar() {
     }
     let role = localStorage.getItem('role')
     console.log(role);
-    if(role===1) console.log("its 1")
   return (
     <div className="navbar">
         <div style={{display:'flex',gap:'30px',alignItems:'center'}}>

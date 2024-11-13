@@ -9,7 +9,7 @@ public class CinemaApplication {
 	public static ConfigurableApplicationContext context;
 
 	public static void main(String[] args) {
-		SpringApplication.run(CinemaApplication.class, args);
+		context = SpringApplication.run(CinemaApplication.class, args);
 	}
 
 }
