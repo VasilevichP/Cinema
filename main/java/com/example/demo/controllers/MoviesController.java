@@ -18,7 +18,6 @@ public class MoviesController {
 
     @PostMapping("/get_movie_info")
     public Object getMovieInfo(@RequestBody String title){
-        System.out.println("in get movie");
         System.out.println(title);
         Movie movie = movieService.getMovie(title);
         if(movie.getId()==null) return 1;

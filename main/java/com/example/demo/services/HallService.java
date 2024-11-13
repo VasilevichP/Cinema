@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Optional;
+
 @Service
 public class HallService {
     private final HallRepository hallRepository;
@@ -29,11 +30,13 @@ public class HallService {
         Optional<Hall> optHall = hallRepository.findById(id);
         return optHall.get();
     }
-    public boolean findHallByLogin(long id) {
+
+    public boolean findHallById(long id) {
         Optional<Hall> optHall = hallRepository.findById(id);
         if (optHall.isEmpty()) return false;
         else return true;
     }
+
     public boolean addHallToDB(HallModel hallModel) {
         try {
             Hall hall = HallModel.fromModel(hallModel);
@@ -44,6 +47,27 @@ public class HallService {
         }
     }
 
+    public boolean deleteHall(long id) {
+        try {
+            Hall hall = getHall(id);
+            hallRepository.delete(hall);
+            return true;
+        }catch (Exception e){
+            return false;
+        }
+    }
+    public boolean changeStatus(long id) {
+        try {
+            Hall hall = getHall(id);
+            if (hall.isStatus()) {
+                hall.setStatus(false);
+            } else hall.setStatus(true);
+            hallRepository.save(hall);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
     public ArrayList<Hall> findNotBlockedHalls() {
         return (ArrayList<Hall>) hallRepository.findHallByStatus(true);
     }

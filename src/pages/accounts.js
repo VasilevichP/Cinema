@@ -4,6 +4,7 @@ import '../css/main.css';
 import axios from 'axios';
 import Navbar from '../components/Navbar';
 import Delete from '../images/delete.png';
+import Modal from "react-modal";
 
 function Account() {
     const [accounts, setAccounts] = useState([]);
@@ -63,9 +64,30 @@ function Account() {
             console.log("error: ")
         }
     }
+    const [confirm, setConfirm] = useState('')
+    const [acc_login, setAcc_login] = useState('')
+    let [showModal, setShowModal] = useState(false)
+    function showMod(acc, conf) {
+        setConfirm(conf);
+        setAcc_login(acc)
+        setShowModal(true)
+    }
+    function closeMod() {
+        setConfirm('');
+        setAcc_login('')
+        setShowModal(false)
+    }
     return (
         <div>
             <Navbar />
+            <Modal isOpen={showModal} onRequestClose={()=>setShowModal(false)}
+                className="modal-content">
+                <p>{confirm}</p>
+                <div style={{ display: "flex", justifyContent: "space-evenly" }}>
+                    <button className='mod-conf-btn' onClick={() => { setShowModal(false); deleteAccount(acc_login) }}>Да</button>
+                    <button className='mod-decl-btn' onClick={() => closeMod()}>Нет</button>
+                </div>
+            </Modal>
             <div style={{ width: '50%', margin: 'auto' }}>
                 <div className="scroll-table" style={{ marginTop: '7em' }}>
                     <table>
@@ -92,7 +114,7 @@ function Account() {
                                             }
                                             <td style={{ width: '20%' }}>
                                                 <img src={Delete} className='delete-icon'
-                                                    onClick={() => deleteAccount(account.login) } />
+                                                    onClick={() => showMod(account.login, "Вы уверены, что хотите удалить сотрудника?")} />
                                             </td>
                                         </tr>))
                                 }

@@ -374,3 +374,43 @@ input[type="number"]{
   background-color: white;
   color: #B80000;
 }
+/* .modal-overlay{
+  position: absolute;
+  padding: 20px;
+  width: 20%;
+  top: 10px;
+  left: 40%;
+} */
+.modal-content{
+  background-color: white;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-content: center;
+  border: 1px black solid;
+  width: 20%;
+  left: 40%;
+  position: absolute;
+}
+.mod-conf-btn{
+  background-color: blue;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+}
+.mod-conf-btn:hover{
+  background-color: white;
+  border: 1px solid blue;
+  color: blue;
+}
+.mod-decl-btn{
+  background-color: white;
+  border: 1px solid white;
+  padding: 10px 20px;
+  border-radius: 5px;
+}
+.mod-decl-btn:hover{
+  border: 1px solid black;
+}

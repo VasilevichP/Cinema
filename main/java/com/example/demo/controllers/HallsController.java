@@ -14,13 +14,35 @@ import java.util.List;
 public class HallsController {
     @Autowired
     private HallService hallService;
+
     @GetMapping("halls")
-    public List<Hall> getAll(){
+    public List<Hall> getAll() {
         return (List<Hall>) hallService.getAllHalls();
     }
+
     @PostMapping("add")
-    public int add(@RequestBody HallModel hallModel){
+    public int add(@RequestBody HallModel hallModel) {
         if (hallService.addHallToDB(hallModel)) return 0;
         return 1;
+    }
+
+    @DeleteMapping("delete/{id}")
+    public int delete(@PathVariable int id) {
+        System.out.println("in delete hall");
+        if (!hallService.findHallById(id)) return 1;
+        else {
+            hallService.deleteHall(id);
+            return 0;
+        }
+    }
+
+    @PutMapping("change_status/{id}")
+    public int changeStatus(@PathVariable int id) {
+        System.out.println("in change status");
+        if (!hallService.findHallById(id)) return 1;
+        else {
+            hallService.changeStatus(id);
+            return 0;
+        }
     }
 }
