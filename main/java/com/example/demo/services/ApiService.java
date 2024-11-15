@@ -1,12 +1,15 @@
 package com.example.demo.services;
 
 import com.example.demo.entities.Movie;
+import com.example.demo.models.MovieModel;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.net.SocketException;
 import java.util.ArrayList;
+
+import static com.example.demo.services.MovieService.movieGenres;
 
 @Component
 public class ApiService {
@@ -17,13 +20,13 @@ public class ApiService {
         this.client = builder.baseUrl(API_ADDRESS).build();
     }
 
-    public Movie getMovie(String title) throws SocketException {
+    public MovieModel getMovie(String title) throws SocketException {
         String mes = this.client.get().uri("/movie/search?page=1&limit=1&query=" + title).accept(MediaType.APPLICATION_JSON)
                 .header("X-API-KEY", API_KEY)
                 .exchange().block().bodyToMono(String.class).block();
         System.out.println(mes);
         if (mes.indexOf("]") == mes.indexOf("[") + 1) {
-            return new Movie();
+            return new MovieModel();
         }
 
         try {
@@ -39,12 +42,13 @@ public class ApiService {
             len = len.substring(0, len.indexOf(","));
             String genres = mes.substring(mes.indexOf("\"genres\":") + "\"genres\":".length());
             genres = genres.substring(0, genres.indexOf("]") + 1);
+            System.out.println(genres);
             if (age == null || age.equals("null") || age.equals("")) {
                 age = age.replaceAll("null", "12");
             }
             System.out.println(len);
             if (len == null) {
-                return new Movie();
+                return new MovieModel();
             }
             ArrayList<String> gen = new ArrayList<>();
             String sub;
@@ -56,11 +60,17 @@ public class ApiService {
                 gen.add(genre);
                 if (genres.indexOf("]") == 0) break;
             }
-            MovieService.movieGenres.addAll(gen);
-            Movie mov = new Movie(Long.parseLong(id), name, Integer.parseInt(len), Integer.parseInt(age), poster);
+//            MovieService.movieGenres.addAll(gen);
+            String gs = "";
+            StringBuilder stringBuilder = new StringBuilder(genres);
+            for (String s : gen) {stringBuilder.append(s + ", ");}
+            gs = stringBuilder.toString();
+            gs = gs.substring(1, gs.lastIndexOf(','));
+            System.out.println(gs);
+            MovieModel mov = new MovieModel(Long.parseLong(id), name, poster, Integer.parseInt(len), Integer.parseInt(age),gs);
             return mov;
         } catch (Exception e) {
-            return new Movie();
+            return new MovieModel();
         }
     }
 }

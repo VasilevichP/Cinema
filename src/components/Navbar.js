@@ -8,7 +8,6 @@ export default function Navbar() {
         navigate(`/mainpage`)
     }
     let role = localStorage.getItem('role')
-    console.log(role);
   return (
     <div className="navbar">
         <div style={{display:'flex',gap:'30px',alignItems:'center'}}>

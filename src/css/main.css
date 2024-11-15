@@ -126,7 +126,7 @@ label {
 
 .film-scroll {
   background-color: #180050;
-  height: 604px;
+  height: 590px;
   width: 100%;
   overflow-x: hidden;
   overflow-y: scroll;
@@ -140,7 +140,8 @@ label {
   text-align: center;
   cursor: pointer;
 }
-.card:hover{
+
+.card:hover {
   background-color: #13003f;
 }
 
@@ -171,6 +172,7 @@ label {
   background-color: #F5F1FF;
   border-radius: 30px;
   margin-bottom: 20px;
+  font-size: 15px;
 }
 
 h4 {
@@ -186,12 +188,37 @@ p {
 }
 
 .timetable {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  justify-content: normal;
   width: 100%;
   height: 40px;
   background-color: transparent;
   border: 1px #303030 solid;
 }
-
+.timeline{
+  position: relative;
+  display: flex;
+  flex-direction: row;
+}
+.timeline p{
+  position: absolute;
+}
+.session-object {
+  position: absolute;
+  height: 40px;
+  background-color: #2d2d2d;
+}
+.session-object p {
+  margin-bottom: 4px;
+  color: white;
+  font-size: 14px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: 4px 8px;
+}
 .maincard {
   width: 45%;
   background-color: #180050;
@@ -209,26 +236,22 @@ p {
   overflow-y: scroll;
   scrollbar-width: none;
   white-space: nowrap;
-  height: 545px;
+  height: 520px;
 }
 
 .search {
-  width: 50%;
-  display: flex;
-  align-items: stretch;
-  height: 100%;
+  height: 90%;
 }
 
 .search-input {
-  width: 90%;
+  width: 170%;
   background-color: transparent;
   border: white 1px solid;
-  border-top-left-radius: 30px;
-  border-bottom-left-radius: 30px;
-  border-right: none;
+  border-radius: 30px;
   outline: none;
   color: white;
   padding-left: 20px;
+  height: 100%;
 }
 
 .search-button {
@@ -261,7 +284,7 @@ p {
 }
 
 .scroll-table table {
-  border-collapse:collapse ;
+  border-collapse: collapse;
   width: 100%;
   table-layout: fixed;
   border: none;
@@ -292,12 +315,14 @@ p {
   text-align: center;
   padding: 5px;
 }
-.delete-icon{
+
+.delete-icon {
   height: 20px;
   vertical-align: middle;
   cursor: pointer;
 }
-.choose-select{
+
+.choose-select {
   background-color: #180050;
   border: white 1px solid;
   height: 2.1em;
@@ -305,9 +330,11 @@ p {
   padding-left: 15px;
   width: 100%;
 }
-input[type="number"]{
+
+input[type="number"] {
   -moz-appearance: textfield;
 }
+
 .modalBackground {
   background: rgba(0, 0, 0, 0.8);
   position: fixed;
@@ -341,47 +368,47 @@ input[type="number"]{
   margin: auto;
   margin-bottom: 20px;
 }
-.modalInput{
+
+.modalInput {
   width: 100%;
   background-color: transparent;
   border: black 1px solid;
   height: 2.5em;
 }
-.modalLabel{
+
+.modalLabel {
   color: #212121;
   font-size: 14px;
   margin-top: 15px;
 }
-.modalGreenBtn{
+
+.modalGreenBtn {
   background-color: #06AC00;
   color: white;
   padding: 10px;
   border: none;
   border: #06AC00 1px solid;
 }
-.modalGreenBtn:hover{
+
+.modalGreenBtn:hover {
   background-color: white;
   color: #06AC00;
 }
-.modalRedBtn{
+
+.modalRedBtn {
   background-color: #B80000;
   color: white;
   padding: 10px;
   border: none;
   border: #B80000 1px solid;
 }
-.modalRedBtn:hover{
+
+.modalRedBtn:hover {
   background-color: white;
   color: #B80000;
 }
-/* .modal-overlay{
-  position: absolute;
-  padding: 20px;
-  width: 20%;
-  top: 10px;
-  left: 40%;
-} */
-.modal-content{
+
+.modal-content {
   background-color: white;
   padding: 20px;
   display: flex;
@@ -393,24 +420,56 @@ input[type="number"]{
   left: 40%;
   position: absolute;
 }
-.mod-conf-btn{
+
+.mod-conf-btn {
   background-color: blue;
   color: white;
   border: none;
   padding: 10px 20px;
   border-radius: 5px;
 }
-.mod-conf-btn:hover{
+
+.mod-conf-btn:hover {
   background-color: white;
   border: 1px solid blue;
   color: blue;
 }
-.mod-decl-btn{
+
+.mod-decl-btn {
   background-color: white;
   border: 1px solid white;
   padding: 10px 20px;
   border-radius: 5px;
 }
-.mod-decl-btn:hover{
+
+.mod-decl-btn:hover {
   border: 1px solid black;
+}
+
+.filter-button {
+  background-color: #180050;
+  border: none;
+  border-radius: 30px;
+  outline: none;
+  color: #F2C688;
+  padding: 15px 20px;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.filter-button:hover {
+  cursor: pointer;
+  color: #CBA46E;
+}
+
+.search-input-film {
+  width: 90%;
+  background-color: transparent;
+  border: white 1px solid;
+  border-top-left-radius: 30px;
+  border-bottom-left-radius: 30px;
+  border-right: none;
+  outline: none;
+  color: white;
+  padding-left: 20px;
 }

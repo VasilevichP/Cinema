@@ -3,6 +3,7 @@ package com.example.demo.services;
 import com.example.demo.entities.Genres;
 import com.example.demo.entities.Movie;
 import com.example.demo.entities.Session;
+import com.example.demo.models.MovieModel;
 import com.example.demo.repositories.GenresRepository;
 import com.example.demo.repositories.MovieRepository;
 import com.example.demo.repositories.SessionRepository;
@@ -31,10 +32,10 @@ public class MovieService {
         this.sessionRepository = sessionRepository;
     }
 
-    public Movie getMovie(String title) {
+    public MovieModel getMovie(String title) {
         movieGenres = new ArrayList<>();
         ApiService apiService = context.getBean(ApiService.class);
-        Movie movie;
+        MovieModel movie;
         try {
             movie = apiService.getMovie(title);
         } catch (SocketException e) {
@@ -109,13 +110,16 @@ public class MovieService {
         Iterable<Genres> genres = genresRepository.findAll();
         ArrayList<String> gens = new ArrayList<>();
         Set<String> set = new HashSet<>();
-        for (Genres g : genres) set.add(g.getGenre());
+        for (Genres g : genres) {
+            String genre = g.getGenre();
+            set.add(genre.substring(0,1).toUpperCase()+genre.substring(1));
+        }
         gens.addAll(set);
         return gens;
     }
 
-    public Iterable<Movie> search(Iterable<Movie> allMovies, String search) {
-        ArrayList<Movie> searched = new ArrayList<Movie>();
+    public List<Movie> search(List<Movie> allMovies, String search) {
+        List<Movie> searched = new ArrayList<Movie>();
         for (Movie m : allMovies) {
             if (m.getName().toLowerCase().contains(search.toLowerCase().strip())) {
                 searched.add(m);
@@ -132,28 +136,16 @@ public class MovieService {
     }
 
 
-    public Iterable<Movie> sort(Iterable<Movie> allMovies, String sort) {
+    public List<Movie> sort(List<Movie> allMovies, int sort) {
         ArrayList<Movie> movies = (ArrayList<Movie>) StreamSupport.stream(allMovies.spliterator(), false)
                 .collect(Collectors.toList());
         Stream<Movie> movs = movies.stream();
         switch (sort) {
-            case "1":
-                allMovies = movs.sorted(Comparator.comparing(Movie::getName)).collect(Collectors.toList());
-                break;
-            case "2":
-                allMovies = movs.sorted(Comparator.comparing(Movie::getName).reversed()).collect(Collectors.toList());
-                break;
-            case "3":
-                allMovies = movs.sorted(Comparator.comparing(Movie::getMovieLength)).collect(Collectors.toList());
-                break;
-            case "4":
-                allMovies = movs.sorted(Comparator.comparing(Movie::getMovieLength).reversed()).collect(Collectors.toList());
-                break;
-            case "5":
-                allMovies = movs.sorted(Comparator.comparing(Movie::getDate_of_return)).collect(Collectors.toList());
-                break;
-            case "6":
+            case 1:
                 allMovies = movs.sorted(Comparator.comparing(Movie::getDate_of_return).reversed()).collect(Collectors.toList());
+                break;
+            case 2:
+                allMovies = movs.sorted(Comparator.comparing(Movie::getDate_of_return)).collect(Collectors.toList());
                 break;
             default:
                 break;
@@ -161,29 +153,16 @@ public class MovieService {
         return allMovies;
     }
 
-    public Iterable<Movie> filter(Iterable<Movie> allMovies, String filt) {
+    public List<Movie> filter(List<Movie> allMovies, String filt) {
         ArrayList<Movie> movies = (ArrayList<Movie>) StreamSupport.stream(allMovies.spliterator(), false)
                 .collect(Collectors.toList());
-        Stream<Movie> movs = movies.stream();
-        switch (filt) {
-            case "-":
-                return movies;
-            case "2", "3", "5", "7":
-                allMovies = movs.filter(m -> m.getPermission() == Integer.parseInt(filt)).collect(Collectors.toList());
-                return allMovies;
-            case "0", "6", "12", "18":
-                allMovies = movs.filter(m -> m.getAgeRating() == Integer.parseInt(filt)).collect(Collectors.toList());
-                return allMovies;
-            default:
-                System.out.println(filt);
-                ArrayList<Movie> deleted = new ArrayList<>();
-                for (Movie m : movies) {
-                    if (!(findArrGenres(m.getId())).contains(filt)) {
-                        deleted.add(m);
-                    }
-                }
-                movies.removeAll(deleted);
+        ArrayList<Movie> deleted = new ArrayList<>();
+        for (Movie m : allMovies) {
+            if (!(findArrGenres(m.getId())).contains(filt.toLowerCase())) {
+                deleted.add(m);
+            }
         }
+        movies.removeAll(deleted);
         return movies;
     }
 

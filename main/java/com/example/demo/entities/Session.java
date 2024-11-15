@@ -22,13 +22,15 @@ public class Session {
     private Long movie;
     private Long hall;
     private LocalDate date;
+    private int length;
     private LocalTime start_time;
     private LocalTime end_time;
     public int status;
-    public Session(Long movie_id, Long hall_id, LocalDate date, LocalTime start_time, LocalTime end_time) {
+    public Session(Long movie_id, Long hall_id, LocalDate date, int length, LocalTime start_time, LocalTime end_time) {
         this.movie = movie_id;
         this.hall = hall_id;
         this.date = date;
+        this.length = length;
         this.start_time = start_time;
         this.end_time = end_time;
         this.status=0;
