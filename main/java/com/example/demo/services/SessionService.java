@@ -94,10 +94,10 @@ public class SessionService {
         return allSessions;
     }
     public List<Session> filterByDayHall(LocalDate day,Long hall) {
-        List<Session> sessions = (ArrayList<Session>) StreamSupport.stream(sessionRepository.findAll().spliterator(), false)
+        List<Session> sessions = StreamSupport.stream(sessionRepository.findAll().spliterator(), false)
                 .collect(Collectors.toList());
         Stream<Session> sess = sessions.stream();
-        sessions = sess.filter(s -> (s.getDate().isEqual(day) && s.getHall()==hall)).collect(Collectors.toList());
+        sessions = sess.filter(s -> (s.getDate().isEqual(day) && s.getHall().equals(hall))).collect(Collectors.toList());
         return sessions;
     }
 

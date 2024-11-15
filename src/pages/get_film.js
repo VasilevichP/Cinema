@@ -4,6 +4,7 @@ import '../css/main.css';
 import axios from 'axios';
 import Navbar from '../components/Navbar';
 import SearchImg from '../images/search_button.png';
+import Toast from '../components/Toast';
 
 function GetFilm() {
     const [id, setId] = useState('')
@@ -28,10 +29,19 @@ function GetFilm() {
             console.log("data", status)
             switch (status) {
                 case 1:
+                    setToastClass("toast err-toast")
+                    setToastMsg("Фильм не найден")
+                    handleShowToast()
                     break;
                 case 2:
+                    setToastClass("toast err-toast")
+                    setToastMsg("Данный фильм не предназначен для просмотра в кинотеатре")
+                    handleShowToast()
                     break;
                 case 3:
+                    setToastClass("toast err-toast")
+                    setToastMsg("Данный фильм уже есть в базе данных кинотеатра")
+                    handleShowToast()
                     break;
                 default:
                     setId(status.id)
@@ -72,8 +82,14 @@ function GetFilm() {
                     setDisplay('none')
                     setPermission('2')
                     setRent('')
+                    setToastClass("toast succ-toast")
+                    setToastMsg("Фильм был добавлен в базу данных")
+                    handleShowToast()
                     break;
                 case 1:
+                    setToastClass("toast err-toast")
+                    setToastMsg("Возникла ошибка при добавлении фильма")
+                    handleShowToast()
                     break;
                 default:
                     break;
@@ -82,12 +98,24 @@ function GetFilm() {
             console.log("error: ")
         }
     }
+
+    const [toastMsg, setToastMsg] = useState('')
+    const [toastClass, setToastClass] = useState('')
+    const [showToast, setShowToast] = useState(false);
+
+    const handleShowToast = () => {
+        setShowToast(true);
+    };
+
+    const handleCloseToast = () => {
+        setShowToast(false);
+    };
     return (
         <div>
             <Navbar />
             <div style={{ width: '67%', margin: 'auto', marginTop: '7em', height: '40px', display: 'flex', justifyContent: 'end' }}>
                 <form onSubmit={get_info}>
-                    <div className='search' style={{ width: "100%",display:'flex',alignItems:'stretch' }}>
+                    <div className='search' style={{ width: "100%", display: 'flex', alignItems: 'stretch' }}>
                         <input className='search-input-film' required placeholder='Введите название фильма'
                             value={title} onChange={(e) => setTitle(e.target.value)} />
                         <button style={{ width: "12%" }} className='search-button'>
@@ -129,12 +157,13 @@ function GetFilm() {
 
                             </table>
                             <div style={{ display: 'flex', width: '100%', justifyContent: 'end', height: '100%', alignItems: 'end' }}>
-                            <button className="auth-reg-button" style={{ width: 'auto', padding: '15px 20px' }}>Добавить</button>
+                                <button className="auth-reg-button" style={{ width: 'auto', padding: '15px 20px' }}>Добавить</button>
                             </div>
                         </div>
                     </div>
                 </form>
             </div>
+            {showToast && <Toast message={toastMsg} onClose={handleCloseToast} cl={toastClass} />}
         </div>
     )
 }

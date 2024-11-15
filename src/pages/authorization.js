@@ -2,12 +2,24 @@ import { useState } from 'react';
 import { BrowserRouter as Router, Navigate, Route, Routes, useNavigate } from 'react-router-dom';
 import '../css/main.css';
 import axios from 'axios';
+import Toast from '../components/Toast';
 
 function App() {
   localStorage.removeItem('role')
   const[login,setLogin] = useState('')
   const[password,setPassword] = useState('')
   const[error, setError]= useState('')
+  const[toastMsg, setToastMsg]= useState('')  
+  const[toastClass, setToastClass]= useState('')
+  const [showToast, setShowToast] = useState(false);
+
+    const handleShowToast = () => {
+        setShowToast(true);
+    };
+
+    const handleCloseToast = () => {
+        setShowToast(false);
+    };
   let navigate = useNavigate()
   const enter= async (e)=>{
     e.preventDefault()
@@ -30,6 +42,9 @@ function App() {
           navigate(`/mainpage`);
           break;
         default:
+          setToastClass("toast err-toast")
+          setToastMsg("Неправильный логин и/или пароль")
+          handleShowToast()
         console.log("nope");  
         break;
       }
@@ -60,6 +75,7 @@ function App() {
           <button className='auth-reg-button' type="submit">Войти</button>
          </form>
         </div>
+        {showToast && <Toast message={toastMsg} onClose={handleCloseToast} cl={toastClass}/>}
       </div>
     </div>
   );

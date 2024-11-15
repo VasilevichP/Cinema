@@ -48,6 +48,8 @@ public class ScheduleController {
             LocalTime start = s.getStart_time();
             LocalTime end = s.getEnd_time();
             int length = start.getHour() * 60 + start.getMinute() - 480;
+            map.put("start_time",start.toString());
+            map.put("end_time",end.toString());
             map.put("left", length);
             length = end.getHour() * 60 + end.getMinute() - 480;
             map.put("right", length);
@@ -91,11 +93,11 @@ public class ScheduleController {
             map.put("movie_name", title);
             LocalTime start = s.getStart_time();
             LocalTime end = s.getEnd_time();
+            map.put("start_time",start.toString());
+            map.put("end_time",end.toString());
             int left = start.getHour() * 60 + start.getMinute() - 480;
-            System.out.println(left);
             map.put("left", left);
             int right = end.getHour() * 60 + end.getMinute() - 480;
-            System.out.println(right);
             map.put("right", right);
             sess_list.add(map);
         }
@@ -132,30 +134,71 @@ public class ScheduleController {
         if (end_time.isAfter(LocalTime.of(0, 0)) && end_time.isBefore(LocalTime.of(8, 0))) return 2;
         List<Session> sessions = sessionService.filterByDayHall(date, (long) hall);
         for (Session s : sessions) {
-            if ((start_time.isBefore(s.getEnd_time()) && start_time.isAfter(s.getStart_time())) || (end_time.isBefore(s.getEnd_time()) && end_time.isAfter(s.getStart_time())))
+            if (((start_time.isBefore(s.getEnd_time())||(start_time.equals(s.getEnd_time()))) && start_time.isAfter(s.getStart_time())) || (end_time.isBefore(s.getEnd_time()) && end_time.isAfter(s.getStart_time()))) {
+                System.out.println("накладка");
                 return 3;
+            }
         }
         Session session = new Session((long) movie_id, (long) hall, date, length, start_time, end_time);
         sessionService.addSession(session);
         return 0;
     }
 
+    @PostMapping("/choose_session")
+    public Map<String, Object> chooseSession(@RequestParam int id) throws Exception {
+        Map<String, Object> data = new HashMap<>();
+        ArrayList<Hall> halls = hallService.findNotBlockedHalls();
+        ArrayList<Hall> ch_halls = new ArrayList<>();
+        Session s = sessionService.getSessionById((long) id);
+        Movie mov = movieService.getMovie(s.getMovie());
+        String name = mov.getName();
+        int permission = mov.getPermission();
+        for (Hall h : halls) {
+            if (h.getPermission() == permission)
+                ch_halls.add(h);
+        }
+        String st_time = s.getStart_time().toString();
+        String e_time = s.getEnd_time().toString();
+        data.put("start_time",st_time);
+        data.put("end_time",e_time);
+        data.put("movie_name", name);
+        data.put("movie_halls", ch_halls);
+        data.put("session", s);
+        return data;
+    }
+
     @PutMapping("/change")
     public int change(@RequestParam int session_id, @RequestParam int hall, @RequestParam String str_date, @RequestParam String str_time) throws Exception {
+        System.out.println("in change");
+        System.out.println("id: "+session_id);
+        System.out.println("hall: "+hall);
+        System.out.println("str_date: "+str_date);
+        System.out.println("time: "+str_time);
         Session session = sessionService.getSessionById((long) session_id);
-//        int length = mov.getMovieLength() + 20;
-//        LocalDate date = LocalDate.parse(str_date);
-//        LocalTime start_time = LocalTime.parse(str_time);
-//        if (start_time.isBefore(LocalTime.of(8, 0))) return 1;
-//        LocalTime end_time = start_time.plusMinutes(length);
-//        if (end_time.isAfter(LocalTime.of(0, 0)) && end_time.isBefore(LocalTime.of(8, 0))) return 2;
-//        List<Session> sessions = sessionService.filterByDayHall(date, (long) hall);
-//        for (Session s : sessions) {
-//            if ((start_time.isBefore(s.getEnd_time()) && start_time.isAfter(s.getStart_time())) || (end_time.isBefore(s.getEnd_time()) && end_time.isAfter(s.getStart_time())))
-//                return 3;
-//        }
-//        Session session = new Session((long) movie_id, (long) hall, date, length, start_time, end_time);
-//        sessionService.addSession(session);
+        int length = session.getLength();
+        LocalDate date = LocalDate.parse(str_date);
+        LocalTime start_time = LocalTime.parse(str_time);
+        System.out.println(str_time);
+        if (start_time.isBefore(LocalTime.of(8, 0))) return 1;
+        LocalTime end_time = start_time.plusMinutes(length);
+        if (end_time.isAfter(LocalTime.of(0, 0)) && end_time.isBefore(LocalTime.of(8, 0))) return 2;
+        List<Session> sessions = sessionService.filterByDayHall(date, (long) hall);
+        for (Session s : sessions) {
+            if ((!s.getId().equals(session.getId())) &&((start_time.isBefore(s.getEnd_time()) && start_time.isAfter(s.getStart_time())) || (end_time.isBefore(s.getEnd_time()) && end_time.isAfter(s.getStart_time())))) {
+                return 3;
+            }
+        }
+        session.setHall((long) hall);session.setDate(date);
+        session.setStart_time(start_time);session.setEnd_time(end_time);
+        System.out.println(session.getStart_time());
+        sessionService.addSession(session);
         return 0;
+    }
+    @DeleteMapping("/delete/{id}")
+    public int delete(@PathVariable int id){
+        if(sessionService.deleteSession((long) id)) {
+            return 0;
+        }
+        return 1;
     }
 }

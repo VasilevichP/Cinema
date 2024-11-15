@@ -48,8 +48,9 @@ public class AuthorizationController {
     public int deleteAccount(@PathVariable String loginDel){
         if(accountService.getAcc(loginDel).getRole()==1) return 0;
         else{
-            accountService.deleteAccountByLogin(loginDel);
+            if (accountService.deleteAccountByLogin(loginDel))
             return 1;
+            return 2;
         }
     }
 }

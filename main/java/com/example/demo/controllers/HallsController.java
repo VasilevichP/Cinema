@@ -28,7 +28,6 @@ public class HallsController {
 
     @DeleteMapping("delete/{id}")
     public int delete(@PathVariable int id) {
-        System.out.println("in delete hall");
         if (!hallService.findHallById(id)) return 1;
         else {
             hallService.deleteHall(id);
@@ -38,7 +37,6 @@ public class HallsController {
 
     @PutMapping("change_status/{id}")
     public int changeStatus(@PathVariable int id) {
-        System.out.println("in change status");
         if (!hallService.findHallById(id)) return 1;
         else {
             hallService.changeStatus(id);

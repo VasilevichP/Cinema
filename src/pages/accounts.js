@@ -5,6 +5,7 @@ import axios from 'axios';
 import Navbar from '../components/Navbar';
 import Delete from '../images/delete.png';
 import Modal from "react-modal";
+import Toast from '../components/Toast';
 
 function Account() {
     const [accounts, setAccounts] = useState([]);
@@ -29,9 +30,15 @@ function Account() {
             console.log("data", status)
             switch (status) {
                 case 0:
+                    setToastClass("toast err-toast")
+                    setToastMsg("Данный логин существует в системе")
+                    handleShowToast()
                     break;
                 case 1:
                     loadAccounts();
+                    setToastClass("toast succ-toast")
+                    setToastMsg("Сотрудник был добавлен в систему")
+                    handleShowToast()
                     setLogin('');
                     setPassword('');
                     break;
@@ -43,7 +50,7 @@ function Account() {
             console.log("error: ")
         }
     }
-    const {loginDel} = useParams();
+    const { loginDel } = useParams();
     const deleteAccount = async (loginDel) => {
         console.log("loginDel: ", loginDel)
         try {
@@ -52,11 +59,20 @@ function Account() {
             console.log("data", status)
             switch (status) {
                 case 0:
+                    setToastClass("toast err-toast")
+                    setToastMsg("Нельзя удалить администратора")
+                    handleShowToast()
                     break;
                 case 1:
                     loadAccounts();
+                    setToastClass("toast succ-toast")
+                    setToastMsg("Сотрудник был удален")
+                    handleShowToast()
                     break;
                 default:
+                    setToastClass("toast err-toast")
+                    setToastMsg("Возникла ошибка при удалении сотрудника")
+                    handleShowToast()
                     console.log("nope");
                     break;
             }
@@ -77,10 +93,22 @@ function Account() {
         setAcc_login('')
         setShowModal(false)
     }
+
+    const [toastMsg, setToastMsg] = useState('')
+    const [toastClass, setToastClass] = useState('')
+    const [showToast, setShowToast] = useState(false);
+
+    const handleShowToast = () => {
+        setShowToast(true);
+    };
+
+    const handleCloseToast = () => {
+        setShowToast(false);
+    };
     return (
         <div>
             <Navbar />
-            <Modal isOpen={showModal} onRequestClose={()=>setShowModal(false)}
+            <Modal isOpen={showModal} onRequestClose={() => setShowModal(false)}
                 className="modal-content">
                 <p>{confirm}</p>
                 <div style={{ display: "flex", justifyContent: "space-evenly" }}>
@@ -139,6 +167,7 @@ function Account() {
                     <button className='auth-reg-button' type="submit">Добавить</button>
                 </form>
             </div>
+            {showToast && <Toast message={toastMsg} onClose={handleCloseToast} cl={toastClass} />}
         </div>
     )
 }
