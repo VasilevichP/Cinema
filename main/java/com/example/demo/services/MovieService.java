@@ -57,7 +57,14 @@ public class MovieService {
         } catch (Exception e) {
         }
     }
-
+    public void deleteExpired(LocalDate localDate){
+        Iterable<Movie> allMovies = movieRepository.findAll();
+        for (Movie movie : allMovies)
+            if (!movie.getDate_of_return().isBefore(localDate)) {
+                deleteSessionByMovie(movie.getId());
+                movieRepository.delete(movie);
+            }
+    }
     public void deleteSessionByMovie(long id) {
         Iterable<Session> sessions = sessionRepository.findAllByMovie(id);
         for (Session s : sessions) if (s.getStatus() == 0) sessionRepository.deleteById(s.getId());

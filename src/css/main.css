@@ -175,6 +175,7 @@ label {
   font-size: 15px;
   display: flex;
   flex-direction: column;
+  gap: 5px;
 }
 
 h4 {
@@ -479,14 +480,19 @@ input[type="number"] {
 }
 .toast {
   position: fixed;
-  bottom: 20px;
+  bottom: 50px;
   left: 50%;
   transform: translateX(-50%);
   padding: 10px 20px;
   border-radius: 5px;
   z-index: 1000;
-  transition: opacity 0.5s;
+  transition: opacity 1s;
+  opacity: 1; 
 }
+.fade-out {
+  opacity: 0; /* Скрываем Toast */
+}
+
 .err-toast{
   background-color: rgba(254, 153, 153);
   color: rgba(124, 0, 0);

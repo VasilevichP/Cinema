@@ -400,8 +400,13 @@ function Schedule() {
                                                     <div className='timetable'>
                                                         {
                                                             sessions.map((sess, index) => sess.session.hall == hall.id && sess.session.date == date && (
-                                                                <div key={index} className='session-object' style={{ width: `${100 / 960 * sess.session.length}%`, left: `${100 / 960 * sess.left}%` }}
-                                                                    onClick={(e) => session_clicked(sess.session.id)}
+                                                                <div key={index} className='session-object' style={{ width: `${100 / 960 * sess.session.length}%`, left: `${100 / 960 * sess.left}%`,
+                                                                backgroundColor: sess.session.status==0 ? "black" : "gray", cursor: sess.session.status==0 ? "pointer" : ""}}
+                                                                    onClick={(e) => {
+                                                                        if (sess.session.status == 0) {
+                                                                            session_clicked(sess.session.id);
+                                                                        }
+                                                                    }}
                                                                 >
                                                                     <p>{sess.movie_name}</p>
                                                                 </div>

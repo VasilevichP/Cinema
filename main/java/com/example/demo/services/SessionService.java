@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -72,13 +73,22 @@ public class SessionService {
         }
     }
 
-    public void markAsShown(LocalDate date) {
+    public void markAsShown() {
+        LocalDate now = LocalDate.now();
+        LocalTime current = LocalTime.now();
         Iterable<Session> sessions = sessionRepository.findAll();
-        for (Session s : sessions)
-            if (s.getDate().isBefore(date)) {
+        for (Session s : sessions) {
+            if (s.getDate().isBefore(now)) {
                 s.setStatus(1);
                 sessionRepository.save(s);
             }
+            if(s.getDate().isEqual(now)){
+                if(s.getStart_time().isBefore(current)){
+                    s.setStatus(1);
+                    sessionRepository.save(s);
+                }
+            }
+        }
     }
 
     public List<Session> filterByDay(List<Session> allSessions, LocalDate day) {

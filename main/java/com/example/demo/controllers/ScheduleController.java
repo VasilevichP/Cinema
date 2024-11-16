@@ -31,7 +31,7 @@ public class ScheduleController {
     public Map<String, Object> show() throws Exception {
         Map<String, Object> data = new HashMap<>();
         ArrayList<LocalDate> dates = new ArrayList<>();
-        ;
+        sessionService.markAsShown();
         for (int i = 0; i < 7; i++) {
             LocalDate date = LocalDate.now().plusDays(i);
             dates.add(date);

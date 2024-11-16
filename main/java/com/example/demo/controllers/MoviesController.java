@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.*;
 
 import static com.example.demo.services.MovieService.movieGenres;
@@ -20,7 +21,6 @@ public class MoviesController {
 
     @PostMapping("/get_movie_info")
     public Object getMovieInfo(@RequestBody String title){
-        System.out.println(title);
         MovieModel movie = movieService.getMovie(title);
         if(movie.getId()==null) return 1;
         if(movie.getMovieLength()==0) return 2;
@@ -44,6 +44,7 @@ public class MoviesController {
     }
     @GetMapping("/movies")
     public Map<String,Object> getMovies(){
+        movieService.deleteExpired(LocalDate.now());
         ArrayList<String> distGenres = movieService.getDistinctGens();
         List<Movie> movies = (List<Movie>) movieService.getAllMovies();
         List<Map<String,Object>> movie_list = new ArrayList<>();
