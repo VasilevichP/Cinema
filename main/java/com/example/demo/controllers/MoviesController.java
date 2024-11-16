@@ -44,7 +44,6 @@ public class MoviesController {
     }
     @GetMapping("/movies")
     public Map<String,Object> getMovies(){
-        movieService.deleteExpired(LocalDate.now());
         ArrayList<String> distGenres = movieService.getDistinctGens();
         List<Movie> movies = (List<Movie>) movieService.getAllMovies();
         List<Map<String,Object>> movie_list = new ArrayList<>();
@@ -79,5 +78,13 @@ public class MoviesController {
         response.put("dist_genres",distGenres);
         response.put("movies",movie_list);
         return response;
+    }
+    @DeleteMapping("/delete/{id}")
+    public int delete(@PathVariable int id) {
+        if (!movieService.findById((long) id)) return 1;
+        else {
+            movieService.deleteMovie((long) id);
+            return 0;
+        }
     }
 }
